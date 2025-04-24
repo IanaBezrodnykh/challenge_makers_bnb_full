@@ -1,10 +1,10 @@
 import { Request, Response, Router } from "express";
-import { postCreateUser } from "../controllers/userControllers.js";
+import { postCreateUserController, getUserController} from "../controllers/userControllers.js";
 
 const appRouter: Router = Router();
 
-appRouter.post("/newuser", postCreateUser)
-appRouter.get("/me");
+appRouter.post("/newuser", postCreateUserController)
+appRouter.get("/me", getUserController);
 appRouter.get("/listings");
 appRouter.put("/listings/like/:listingId");
 
