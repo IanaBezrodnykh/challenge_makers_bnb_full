@@ -1,8 +1,5 @@
 import mongoose, { Document } from "mongoose";
-import {
-    UserDocumentId,
-    ArrUserDocumentId,
-} from "../types/userDocumentTypes.js";
+import { UserDocumentId, ArrUserDocumentId } from "../types/userDocumentTypes.js";
 
 interface ListingIntf extends Document {
     img: string;
