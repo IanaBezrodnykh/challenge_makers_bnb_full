@@ -1,0 +1,61 @@
+.App {
+    height: 100%;
+    margin-top: 5%;
+    text-align: center;
+}
+
+h1,
+h2,
+h3 {
+    color: rgb(14, 69, 69);
+}
+
+.dashboard {
+    display: flex;
+    margin-top: 7%;
+}
+
+#profilePic {
+    margin-top: 10%;
+    max-width: 30%;
+}
+
+.property-img {
+    margin-top: 10%;
+    width: 80%;
+    /* Adjust as needed */
+    height: 50%;
+    /* Ensures uniform size */
+    object-fit: cover;
+    /* Keeps aspect ratio while filling the area */
+    border-radius: 8px;
+    /* Optional: Adds rounded corners */
+}
+
+#listings {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+
+.property-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30%;
+    background-color: rgba(36, 181, 181, 0.497);
+    border-radius: 10px;
+    margin-bottom: 2%;
+    margin-top: 2%;
+}
+
+#profile {
+    border: 2px solid rgba(36, 181, 181, 0.497);
+    border-radius: 10px;
+    margin-right: 3%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

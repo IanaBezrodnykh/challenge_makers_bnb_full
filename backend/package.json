@@ -1,0 +1,33 @@
+{
+  "name": "makers_bnb_ts_express_backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "nodemon dist/index.js",
+    "dev": "node src/index.ts",
+    "seed": "npx tsc && node ./dist/db/seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongodb": "^6.14.2",
+    "mongoose": "^8.12.1",
+    "nodemon": "^3.1.9",
+    "typescript": "^5.8.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.0",
+    "replace-in-file": "^8.3.0",
+    "ts-node": "^10.9.2",
+    "@types/mongoose": "^5.11.96"
+  }
+}
