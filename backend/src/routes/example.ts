@@ -10,3 +10,4 @@ exampleRouter.get("/:id", getExampleByIdController);
 exampleRouter.post("/", postCreateExample);
 
 export default exampleRouter;
+
