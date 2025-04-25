@@ -8,6 +8,17 @@ interface UserIntf extends Document {
     profilePic: string;
 }
 
+/* Check this out:
+const UserSchema = new mongoose.Schema<User>({
+    username: String,
+    bio: String,
+    mostRecentStay: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Listing' 
+    },
+    profilePic: String
+});*/
+
 const UserSchema = new mongoose.Schema<UserIntf>({
     username: { type: String, required: true },
     bio: { type: String, required: false },
@@ -15,6 +26,6 @@ const UserSchema = new mongoose.Schema<UserIntf>({
     profilePic: { type: String, required: true },
 });
 
-const UserModel = mongoose.model<UserIntf>("User", UserSchema);
+const UserModel = mongoose.model<UserIntf>("User", UserSchema); // MongoDB takes the name from here and populate the collection with this name + s
 
 export { UserModel, UserIntf };

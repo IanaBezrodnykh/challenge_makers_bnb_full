@@ -23,6 +23,7 @@ export const postCreateUserController = async (req: Request, res: Response, next
     }
 };
 
+// can use .populate user.populate(mostRecentStay) = object of the listing (finds id in collection)
 export const getUserController = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user: UserIntf | null = await UserModel.findOne();

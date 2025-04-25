@@ -15,6 +15,19 @@ export const getAllListingsController = async (req: Request, res: Response, next
     }
 };
 
+export const getListingById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const listingIdfromParams: string = req.params.listingId;
+        const listing: ListingIntf | null = await ListingModel.findById(listingIdfromParams);
+        if (!listing) {
+            throw new DatabaseError("There is no listing with this id", 404);
+        }
+        res.status(200).send({ listing });
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const putAddRemoveUserIdInLikeArray = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // extract listing from params "/listings/like/:listingId" = req.params.listingId:
@@ -55,8 +68,11 @@ export const putAddRemoveUserIdInLikeArray = async (req: Request, res: Response,
             // save the changes to the db:
             await listingObject.save();
 
+            const listings: ListingIntf[] | null = await ListingModel.find();
+
             res.status(200).send({
                 message: `UserId added to likes in this listing id ${listingIdToUpdate} and here is the listing: ${listingObject}}`,
+                listings,
             });
         }
 

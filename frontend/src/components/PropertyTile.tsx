@@ -4,7 +4,7 @@ import { useState } from "react";
 type PropertyTileProps = {
     img: string;
     name: string;
-    id?: number;
+    id?: string;
 };
 
 const PropertyTile = ({ img, name }: PropertyTileProps) => {
