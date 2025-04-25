@@ -1,31 +1,27 @@
 import mongoose, { Document } from "mongoose";
-import { ListingDocumentId } from "../types/listingDocumentTypes.js";
+import { ListingIntf } from "./listingModel.js";
 
 interface UserIntf extends Document {
     username: string;
     bio: string;
-    mostRecentStay: ListingDocumentId;
+    mostRecentStay: mongoose.Types.ObjectId;
     profilePic: string;
 }
-
-/* Check this out:
-const UserSchema = new mongoose.Schema<User>({
-    username: String,
-    bio: String,
-    mostRecentStay: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Listing' 
-    },
-    profilePic: String
-});*/
-
 const UserSchema = new mongoose.Schema<UserIntf>({
     username: { type: String, required: true },
     bio: { type: String, required: false },
-    mostRecentStay: { type: String, required: false },
+    mostRecentStay: {
+        //instead of creating a new interface/type,
+        // we should use mongoose ObjectId type
+        // that will also link to Listings Model by using ref:
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Listing",
+        required: false,
+    },
     profilePic: { type: String, required: true },
 });
 
-const UserModel = mongoose.model<UserIntf>("User", UserSchema); // MongoDB takes the name from here and populate the collection with this name + s
+// MongoDB takes the name from here and populates the collection with this name + s:
+const UserModel = mongoose.model<UserIntf>("User", UserSchema);
 
 export { UserModel, UserIntf };

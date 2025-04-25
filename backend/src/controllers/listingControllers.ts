@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ListingModel, ListingIntf } from "../models/listingModel.js";
 import { DatabaseError, ValidationError } from "../types/errorTypes.js";
-import { ArrUserDocumentId } from "../types/userDocumentTypes.js";
+import mongoose from "mongoose";
 
 export const getAllListingsController = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -18,7 +18,10 @@ export const getAllListingsController = async (req: Request, res: Response, next
 export const getListingById = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const listingIdfromParams: string = req.params.listingId;
-        const listing: ListingIntf | null = await ListingModel.findById(listingIdfromParams);
+        const listing: ListingIntf | null = await ListingModel.findById(listingIdfromParams).populate([
+            "likes",
+            "owner",
+        ]);
         if (!listing) {
             throw new DatabaseError("There is no listing with this id", 404);
         }
@@ -42,41 +45,42 @@ export const putAddRemoveUserIdInLikeArray = async (req: Request, res: Response,
         }
 
         // extract userId from body of the PUT request:
-        const { user } = req.body;
+        const { user } = req.body; // will return a string
+
+        // convert above user id that is passed as a string into ObjectId type:
+        const userIdAsObject = new mongoose.Types.ObjectId(user);
 
         // extract array of UserIds from Listing.likes object
-        const arrayOfUserIdsInLikes: ArrUserDocumentId = listingObject.likes;
+        const arrayOfUserIdsInLikes: mongoose.Types.ObjectId[] = listingObject.likes;
+
+        // capture if user already liked the listing before modifying it:
+        let isUserAlreadyLiked: boolean = arrayOfUserIdsInLikes.includes(userIdAsObject);
 
         // if statement to check whether this userId is already in likes array and if so, remove it from there:
-        if (arrayOfUserIdsInLikes.includes(user)) {
+        if (isUserAlreadyLiked) {
             //get index of UserId to remove:
-            const indexOfUserIdToRemove: number = arrayOfUserIdsInLikes.indexOf(user);
+            const indexOfUserIdToRemove: number = arrayOfUserIdsInLikes.indexOf(userIdAsObject);
 
             // remove the userId from the likes array based on its index:
             arrayOfUserIdsInLikes.splice(indexOfUserIdToRemove, 1);
-
-            // save the changes to our db:
-            await listingObject.save();
-
-            res.status(200).send({
-                message: `User removed from likes on the follwoing listing ID ${listingIdToUpdate}`,
-            });
         } else {
             // oherwise, if UserId is not in the likes array, we want to add it there:
-            listingObject.likes.push(user);
-
-            // save the changes to the db:
-            await listingObject.save();
-
-            const listings: ListingIntf[] | null = await ListingModel.find();
-
-            res.status(200).send({
-                message: `UserId added to likes in this listing id ${listingIdToUpdate} and here is the listing: ${listingObject}}`,
-                listings,
-            });
+            listingObject.likes.push(userIdAsObject);
         }
 
-        // add this userId to this listing.likes array
+        // save the changes to our db:
+        await listingObject.save();
+
+        // get updated listings array:
+        const listings: ListingIntf[] | null = await ListingModel.find();
+
+        //send the response:
+        res.status(200).send({
+            message: `UserId ${userIdAsObject} ${
+                isUserAlreadyLiked ? "removed from" : "added to"
+            } likes for listing ID ${listingIdToUpdate}`,
+            listings,
+        });
     } catch (error) {
         next(error);
     }

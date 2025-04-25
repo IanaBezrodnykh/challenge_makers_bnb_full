@@ -1,12 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { ExampleParams } from "../types/paramsTypes.js";
 import { ExampleModel, Example } from "../models/example.js";
 import { OneDocumentResponse } from "../types/responsesTypes.js";
 import { DatabaseError, ValidationError } from "../types/errorTypes.js";
-import { BodyParams } from "../types/bodyTypes.js";
 
 const getExampleByIdController = async (
-    req: Request<ExampleParams, {}, {}, {}>,
+    req: Request,
     res: Response<OneDocumentResponse<Example>>,
     next: NextFunction
 ) => {
@@ -28,7 +26,7 @@ const getExampleByIdController = async (
 };
 
 const postCreateExample = async (
-    req: Request<{}, {}, BodyParams, {}>,
+    req: Request,
     res: Response<{ examplesList: Example[]; msg: string }>,
     next: NextFunction
 ) => {
@@ -36,10 +34,7 @@ const postCreateExample = async (
         const { firstProperty, secondProperty, thirdProperty } = req.body;
 
         if (!firstProperty || !secondProperty) {
-            throw new ValidationError(
-                "Missing property on the request body",
-                400
-            );
+            throw new ValidationError("Missing property on the request body", 400);
         }
         // .create() also saves the document so no need to "newDocument.save();"
         const newDocument: Example | null = await ExampleModel.create({
@@ -48,8 +43,7 @@ const postCreateExample = async (
             thirdProperty,
         });
 
-        const exampleDocumentsList: Example[] | null =
-            await ExampleModel.find();
+        const exampleDocumentsList: Example[] | null = await ExampleModel.find();
         console.log(exampleDocumentsList);
 
         res.status(201).send({
